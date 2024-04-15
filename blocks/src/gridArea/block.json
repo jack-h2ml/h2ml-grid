@@ -1,0 +1,84 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "h2ml/grid-area",
+	"version": "0.1.0",
+	"title": "H2ML Grid Area",
+	"category": "widgets",
+	"icon": "smiley",
+	"description": "A block for displaying content within grid based layouts.",
+	"textdomain": "h2ml",
+	"parent": ["h2ml/grid"],
+	"supports": {
+		"anchor": true,
+		"reusable": true,
+		"__experimentalSettings": true,
+		"layout": {
+			"allowSwitching": false,
+			"allowInheriting": false,
+			"allowEditing": true,
+			"default": {
+			  "type": "flex",
+			  "flexWrap": "wrap",
+			  "verticalAlignment": "top",
+			  "justifyContent": "left",
+			  "orientation": "vertical"
+			}
+		},
+		"spacing": {
+			"blockGap": true,
+			"margin": [
+				"top",
+				"bottom"
+			],
+			"padding": true,
+			"__experimentalDefaultControls": {
+				"margin": true,
+				"blockGap": true,
+				"padding": true
+			}
+		},
+		"color": {
+			"enableContrastChecker": false,
+			"gradients": true,
+			"text": true,
+			"background": true
+		},
+		"__experimentalBorder": {
+			"color": true,
+			"radius": true,
+			"style": true,
+			"width": true,
+			"__experimentalDefaultControls": {
+				"color": true,
+				"radius": true,
+				"style": true,
+				"width": true
+			}
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	},
+	"attributes": {
+		"colStart": {
+			"type": "number",
+			"default": 1
+		},
+		"colEnd": {
+			"type": "number",
+			"default": 1
+		},
+		"rowStart": {
+			"type": "number",
+			"default": 2
+		},
+		"rowEnd": {
+			"type": "number",
+			"default": 2
+		}
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.js"
+}

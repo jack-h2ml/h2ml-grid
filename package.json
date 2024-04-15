@@ -1,0 +1,22 @@
+{
+  "name": "h2ml-grid",
+  "version": "1.0.0",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "wp-scripts build --webpack-src-dir=blocks/src --watch",
+    "buildpush": "npm run build && node ./buildScripts/updateThemeVersion ./h2ml-demo-context-consumer.php && git add . && git commit -m 'Webpack Build' && git push"
+  },
+  "author": "Jack Notman",
+  "license": "ISC",
+  "devDependencies": {
+    "@wordpress/icons": "^9.22.0",
+    "@wordpress/scripts": "26.2.0"
+  },
+  "dependencies": {
+    "@emotion/styled": "^11.11.0",
+    "@wordpress/api-fetch": "^6.42.0",
+    "geo-coordinates-parser": "^1.6.3",
+    "multiselect-react-dropdown": "^2.0.25"
+  },
+  "description": ""
+}
