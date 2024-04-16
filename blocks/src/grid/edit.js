@@ -68,6 +68,9 @@ export default function Edit(props) {
 	//
 	const { clientId } = props;
 
+	console.log('hmm', colCount, colDefinitions);
+	
+
 	// State which manages Adding new Grid Area's
 	const [isAppending, setIsAppending] = useState(false);
 
@@ -103,7 +106,10 @@ export default function Edit(props) {
 	}
 	
 	// Sets the WP Block Props
-	const { children, ...innerBlocksProps } = useInnerBlocksProps(useBlockProps({style}), { 
+	const { children, ...innerBlocksProps } = useInnerBlocksProps(useBlockProps({
+		style,
+		className: (isAppending || isUpdating) ? 'editing' : ''
+	}), { 
 		allowedBlocks: ['h2ml/grid-area'],
 		renderAppender: () => (
 			<Appender setIsAppending={setIsAppending}/>
@@ -123,7 +129,8 @@ export default function Edit(props) {
 					addUpdateGridArea={addUpdateGridArea}
 					cancel={cancelAddingGridArea}
 				/>
-				{!(isAppending || isUpdating) && children}
+				{/*!(isAppending || isUpdating) && children*/}
+				{children}
 			</div>
 		</>
 	);

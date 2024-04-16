@@ -15,7 +15,7 @@ const path = require('path');
 
 module.exports = {
 	...defaultConfig,
-	mode: "development",
+	mode: "production",
 	module: {
 		...defaultConfig.module,
 		rules: [

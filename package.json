@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "webpack.config.js",
   "scripts": {
-    "build": "wp-scripts build --webpack-src-dir=blocks/src --watch",
-    "buildpush": "npm run build && node ./buildScripts/updateThemeVersion ./h2ml-demo-context-consumer.php && git add . && git commit -m 'Webpack Build' && git push"
+	"reviseBuild": "node ./build_tools i:revision && wp-scripts build --webpack-src-dir=blocks/src && git add . && git commit -m 'Webpack Revision Build' && git push",
+    "build": "wp-scripts build --webpack-src-dir=blocks/src --watch"
   },
   "author": "Jack Notman",
   "license": "ISC",

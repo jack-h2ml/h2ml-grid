@@ -37,11 +37,11 @@ export default function({ attributes, setAttributes }) {
 
 	//
 	const setNumberCols = (value) => {
-		setAttributes({colCount: value});
+		setAttributes({colCount: Number(value)});
 	};
 
 	const setNumberRows = (value) => {
-		setAttributes({rowCount: value});
+		setAttributes({rowCount: Number(value)});
 	}
 
 	//
