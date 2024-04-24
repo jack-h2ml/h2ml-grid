@@ -51,7 +51,6 @@ export default function HiddenGridAreas ({gridAreas, activeBreakpointId, clientI
 			return Object.keys(breakpoints[activeBreakpointId] ?? {}).length;
 		}).map((hiddenGridArea) => {
 			const { clientId, attributes: {breakpoints} } = hiddenGridArea;
-			console.log(breakpoints);
 			return {
 				clientId,
 				breakpoints,
