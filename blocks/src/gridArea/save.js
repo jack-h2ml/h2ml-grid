@@ -25,6 +25,7 @@ export default function Save({attributes: {breakpoints}, ...hmm}) {
 	//
 	const style = Object.keys(breakpoints).reduce((style, breakpointId) => {
 		const {mediaQuery, ...definition} = breakpoints[breakpointId];
+		console.log(breakpointId, mediaQuery, definition);
 		return style += `@media screen and ${mediaQuery} {
 			@scope {
 				:scope.wp-block-h2ml-grid-area {
