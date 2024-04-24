@@ -17,13 +17,14 @@ import {
  * 
  */
 
-export default function Save({attributes: {breakpoints}}) {
+export default function Save({attributes: {breakpoints}, ...hmm}) {
 
 	//
 	const {children, ...innerBlocksProps} = useInnerBlocksProps.save(useBlockProps.save());
 
 	//
-	const style = Object.values(breakpoints).reduce((style, {mediaQuery, ...definition}) => {
+	const style = Object.keys(breakpoints).reduce((style, breakpointId) => {
+		const {mediaQuery, ...definition} = breakpoints[breakpointId];
 		return style += `@media screen and ${mediaQuery} {
 			@scope {
 				:scope.wp-block-h2ml-grid-area {
