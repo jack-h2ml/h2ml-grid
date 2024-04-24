@@ -1,31 +1,32 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "h2ml/grid",
+	"name": "h2ml/grid-area",
 	"version": "0.1.0",
-	"title": "H2ML Grid",
+	"title": "H2ML Grid Area",
 	"category": "widgets",
 	"icon": "smiley",
-	"description": "A block for crafting grid based layouts.",
+	"description": "A block for displaying content within grid based layouts.",
 	"textdomain": "h2ml",
+	"parent": ["h2ml/grid"],
 	"supports": {
 		"anchor": true,
 		"reusable": true,
-		"align": ["center", "wide", "full"],
 		"__experimentalSettings": true,
 		"layout": {
 			"allowSwitching": false,
 			"allowInheriting": false,
-			"allowEditing": false,
+			"allowEditing": true,
 			"default": {
-				"type": "grid"
+			  "type": "flex",
+			  "flexWrap": "wrap",
+			  "verticalAlignment": "top",
+			  "justifyContent": "left",
+			  "orientation": "vertical"
 			}
-		  },
+		},
 		"spacing": {
-			"blockGap": [
-				"vertical", 
-				"horizontal"
-			],
+			"blockGap": true,
 			"margin": [
 				"top",
 				"bottom"
@@ -55,39 +56,29 @@
 				"width": true
 			}
 		},
-		"dimensions": {
-			"minHeight": true
-		},
 		"typography": {
 			"fontSize": true,
 			"lineHeight": true
 		}
 	},
 	"attributes": {
-		"definingGridArea": {
-			"type": "object"
+		"colStart": {
+			"type": "number",
+			"default": 1
 		},
-		"activeBreakpointId": {
-			"type": "number"
+		"colEnd": {
+			"type": "number",
+			"default": 1
 		},
-		"breakpoints": {
-			"type": "array",
-			"default": [{
-				"id": 1,
-				"name": "",
-				"mediaQuery": "(min-width: 0px)",
-				"colCount": 3,
-				"rowCount": 4,
-				"colDefinitions": ["1fr", "1fr", "1fr"],
-				"rowDefinitions": ["max-content", "max-content", "max-content", "max-content"]
-			}]
+		"rowStart": {
+			"type": "number",
+			"default": 2
+		},
+		"rowEnd": {
+			"type": "number",
+			"default": 2
 		}
 	},
-	"providesContext": {
-		"h2ml-grid/activeBreakpointId": "activeBreakpointId",
-		"h2ml-grid/definingGridArea": "definingGridArea"
-    },
 	"editorScript": "file:./index.js",
-	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css"
+	"style": "file:./style-index.js"
 }

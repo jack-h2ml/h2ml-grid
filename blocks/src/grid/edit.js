@@ -13,23 +13,18 @@ import {
 
 import {
 	select,
+	useSelect,
 	dispatch,
-	withSelect,
-	useSelect
+	useDispatch,
 } from '@wordpress/data';
 
 import {
-	useState,
-	useEffect
+	useMemo
 } from '@wordpress/element';
 
 import {
 	__
 } from '@wordpress/i18n';
-
-import { 
-	register 
-} from '@wordpress/data';
 
 /**
  * Internal Dependencies
@@ -37,67 +32,172 @@ import {
 
 import './edit.scss';
 
-import InspectorControls from './editorDependencies/sidebar';
+import blockDefinition from './block.json';
 
-import GridGuides from './editorDependencies/guides';
+import { useUpdatedBreakpoints } from './editorDependencies/hooks';
+
+import ToolbarControls from './editorDependencies/toolbar';
+
+import InspectorControls from './editorDependencies/sidebar';
 
 import Appender from './editorDependencies/appender';
 
-import store from './../store';
-
-/**
- * Register the store
- */
-
-register(store);
+import HiddenGridAreas from './editorDependencies/hiddenGridAreas';
 
 /**
  * Main
  */
 
-export default function Edit(props) {
+export default function Edit({attributes, setAttributes, clientId}) {
 
-	//Attributes
+	/**
+	 * Global
+	 */
+
+	//
+	const { 
+		breakpoints,
+		definingGridArea,
+		activeBreakpointId = breakpoints[0].id, 
+	} = attributes;
+
+	//
+	const breakpointDefinition = useMemo(() => {
+		return breakpoints.find((breakpoint) => breakpoint.id === activeBreakpointId) ?? breakpoints[0];
+	}, [attributes]);
+
+	//
 	const {
 		colCount,
 		rowCount,
 		colDefinitions,
 		rowDefinitions
-	} = props.attributes;
+	} = breakpointDefinition;
+
+	// Allows us to use setAttributes without actually saving the attribute. Avoids undo / update traps.
+	const { __unstableMarkNextChangeAsNotPersistent } = useDispatch('core/block-editor');
+
+	// Keep a refrence to the Grid Areas belonging to this Grid.
+	const gridAreas = useSelect((select) => select('core/block-editor').getBlocks(clientId));
+
+	/**
+	 * Manage Breakpoints
+	 */
 
 	//
-	const { clientId } = props;
+	const setActiveBreakpointId = (breakpointId) => {
+		__unstableMarkNextChangeAsNotPersistent();
+		setAttributes({
+			activeBreakpointId: breakpointId
+		});
+	}
 
-	console.log('hmm', colCount, colDefinitions);
-	
+	//
+	const createBreakpoint = () => {
+		const nextId = ([...breakpoints].sort((a, b) => b.id - a.id)[0]?.id ?? 0) + 1;
+		setAttributes({
+			breakpoints: [
+				...breakpoints,
+				...[{
+					...blockDefinition.attributes.breakpoints.default[0],
+					id: nextId
+				}]
+			]
+		});
+	};
 
-	// State which manages Adding new Grid Area's
-	const [isAppending, setIsAppending] = useState(false);
+	//
+	const reorderBreakpoint = (change) => {
+		//
+		const breakpointIndex = breakpoints.findIndex(({id}) => id === activeBreakpointId);
+		const newIndex = (breakpointIndex + change) % breakpoints.length;
+		const breakpointsCopy = [...breakpoints];
 
-	// State which manages Updating existing Grid Area's 
-	const isUpdating = useSelect((select) => {
-		const currentlyUpdating = select('h2ml/grid-data').isUpdating();
-		return (currentlyUpdating?.gridClientID === clientId) ? currentlyUpdating.gridAreaClientID : null;
-	}, []);
+		setAttributes({
+			breakpoints: breakpointsCopy.toSpliced(newIndex, 0, ...breakpointsCopy.splice(breakpointIndex, 1))
+		});
+	}
+
+	//
+	const deleteBreakpoint = () => {
+		const breakpointIndex = breakpoints.findIndex(({id}) => id === activeBreakpointId);
+		const breakpointsCopy = breakpoints.toSpliced(breakpointIndex, 1);
+		setAttributes({
+			breakpoints: breakpointsCopy,
+			activeBreakpointId: breakpointsCopy[0].id 
+		});
+	}
+
+	//
+	const updateBreakpointValue = (property, value) => {
+		const currentBreakpoints = select('core/block-editor').getBlockAttributes(clientId).breakpoints;
+		const updatedBreakpointIndex = currentBreakpoints.findIndex(({id}) => id === activeBreakpointId);
+		setAttributes({
+			breakpoints: currentBreakpoints.toSpliced(updatedBreakpointIndex, 1, {
+				...currentBreakpoints[updatedBreakpointIndex],
+				[property]: value
+			})
+		});
+	}
+
+	//
+	useUpdatedBreakpoints(gridAreas, breakpoints);
+
+	/**
+	 * Manage Grid Areas
+	 */
+
+	// Sets state (as attribute) which enables the Grid Appender UI
+	const startAddingGridArea = () => {
+		__unstableMarkNextChangeAsNotPersistent();
+		setAttributes({
+			definingGridArea: {
+				gridAreaClientId: false
+			}
+		})
+	}
 
 	// Resets state after Adding / Updating Grid Area's
 	const cancelAddingGridArea = () => {
-		setIsAppending(false);
-		dispatch('h2ml/grid-data').setIsUpdating(null)
+		setAttributes({definingGridArea: null});
 	}
 
-	// Logic for Adding / Updating Grid Area's
-	const addUpdateGridArea = async (colStart, colEnd, rowStart, rowEnd) => {
-		if(isAppending) {
-			const newGridArea = createBlock('h2ml/grid-area');
-			Object.assign(newGridArea.attributes, {colStart, colEnd, rowStart, rowEnd});
+	// Logic for Appending / Updating Grid Area's
+	const createUpdateGridArea = async (colStart, colEnd, rowStart, rowEnd) => {
+		if(!definingGridArea.gridAreaClientId) {
+			// Adding new Grid Area
+			const newGridArea = Object.assign(createBlock('h2ml/grid-area'), {attributes: {
+				breakpoints: breakpoints.reduce((res, {id, mediaQuery}) => ({
+					...res,
+					[id]: {
+						mediaQuery,
+						...(id === activeBreakpointId && {
+							colStart, colEnd, rowStart, rowEnd
+						})
+					}
+				}), {})
+			}});
 			const insertIndex = select('core/block-editor').getBlockCount(clientId);
 			dispatch('core/block-editor').insertBlock(newGridArea, insertIndex, clientId);
-		} else if(isUpdating) {
-			dispatch('core/block-editor').updateBlockAttributes(isUpdating, {colStart, colEnd, rowStart, rowEnd});
+		} else {
+			// Updating Existing Grid Area
+			const { gridAreaClientId, existingBreakpoints } = definingGridArea;
+			dispatch('core/block-editor').updateBlockAttributes(gridAreaClientId, {
+				breakpoints: {
+					...existingBreakpoints,
+					[activeBreakpointId]: {
+						mediaQuery: breakpointDefinition.mediaQuery,
+						colStart, colEnd, rowStart, rowEnd
+					}
+				}
+			});
 		}
 		cancelAddingGridArea();
 	}
+
+	/**
+	 * Rendering
+	 */
 
 	// Adds style attributes for Grid's columns and rows
 	const style = {
@@ -108,29 +208,44 @@ export default function Edit(props) {
 	// Sets the WP Block Props
 	const { children, ...innerBlocksProps } = useInnerBlocksProps(useBlockProps({
 		style,
-		className: (isAppending || isUpdating) ? 'editing' : ''
+		className: (definingGridArea) ? 'wp-block-h2ml-grid--is-editing' : ''
 	}), { 
 		allowedBlocks: ['h2ml/grid-area'],
-		renderAppender: () => (
-			<Appender setIsAppending={setIsAppending}/>
-		),
+		renderAppender: () => null
 	});
 
-	//
+	// The JSX
 	return (
 		<>
-			<InspectorControls {...props}/>
+			{!definingGridArea && (<ToolbarControls 
+				breakpoints={breakpoints}
+				activeBreakpointId={activeBreakpointId}
+				activeBreakpointName={breakpointDefinition.name}
+				setActiveBreakpointId={setActiveBreakpointId}
+				createBreakpoint={createBreakpoint}
+				reorderBreakpoint={reorderBreakpoint}
+				deleteBreakpoint={deleteBreakpoint}
+			/>)}
+			<InspectorControls 
+				breakpointDefinition={breakpointDefinition}
+				updateBreakpoint={updateBreakpointValue}
+			/>
 			<div {...innerBlocksProps}>
-				<GridGuides
+				<Appender
 					colCount={colCount}
 					rowCount={rowCount}
-					isAppending={isAppending}
-					isUpdating={isUpdating}
-					addUpdateGridArea={addUpdateGridArea}
+					definingGridArea={definingGridArea}
+					start={startAddingGridArea}
+					confirm={createUpdateGridArea}
 					cancel={cancelAddingGridArea}
 				/>
-				{/*!(isAppending || isUpdating) && children*/}
 				{children}
+				<HiddenGridAreas
+					gridAreas={gridAreas}
+					activeBreakpointId={activeBreakpointId}
+					setAttributes={setAttributes}
+					clientId={clientId}
+				/>
 			</div>
 		</>
 	);

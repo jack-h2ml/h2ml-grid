@@ -5,7 +5,7 @@
 
 import { registerBlockType } from '@wordpress/blocks';
 
-import { mapMarker as icon } from '@wordpress/icons';
+import { symbolFilled as icon } from '@wordpress/icons';
 
 /**
  * Internal dependencies
@@ -24,5 +24,6 @@ registerBlockType(metadata.name, {
 	//
 	icon,
 	edit: Edit,
-	save: Save
+	save: Save,
+	usesContext: ['h2ml-grid/activeBreakpointId', 'h2ml-grid/definingGridArea']
 });

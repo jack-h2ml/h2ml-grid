@@ -23,52 +23,37 @@ import BreakpointConfig from './breakpointConfig';
  * Main
  */
 
-export default function({ breakpointDefinition, updateBreakpoint }) {
+export default function({ attributes, setAttributes }) {
 
 	//
 	const {
-		name,
-		mediaQuery,
 		colCount,
 		colDefinitions,
 		rowCount,
 		rowDefinitions
-	} = breakpointDefinition;
-
-	//
-	const setName = (value) => {
-		updateBreakpoint('name', value);
-	}
-
-	//
-	const setMediaQuery = (value) => {
-		updateBreakpoint('mediaQuery', value);
-	}
+	} = attributes;
 
 	//
 	const setNumberCols = (value) => {
-		updateBreakpoint('colCount', Number(value));
+		setAttributes({colCount: Number(value)});
 	};
 
 	const setNumberRows = (value) => {
-		updateBreakpoint('rowCount', Number(value));
+		setAttributes({rowCount: Number(value)});
 	}
 
 	//
 	const setColDefinitions = (values) => {
-		updateBreakpoint('colDefinitions', values);
+		setAttributes({colDefinitions: values});
 	}
 	const setRowDefinitions = (values) => {
-		updateBreakpoint('rowDefinitions', values);
+		setAttributes({rowDefinitions: values});
 	}
 
 	//
 	return (<InspectorControls key="setting">
 		<BreakpointConfig
-			name={name}
-			nameSetter={setName}
-			mediaQuery={mediaQuery}
-			mediaQuerySetter={setMediaQuery}
+
 		/>
 		<GridConfig
 			name='Column'

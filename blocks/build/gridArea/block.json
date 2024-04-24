@@ -64,23 +64,11 @@
     }
   },
   "attributes": {
-    "colStart": {
-      "type": "number",
-      "default": 1
-    },
-    "colEnd": {
-      "type": "number",
-      "default": 1
-    },
-    "rowStart": {
-      "type": "number",
-      "default": 2
-    },
-    "rowEnd": {
-      "type": "number",
-      "default": 2
+    "breakpoints": {
+      "type": "object",
+      "default": {}
     }
   },
   "editorScript": "file:./index.js",
-  "style": "file:./style-index.js"
+  "style": "file:./style-index.css"
 }

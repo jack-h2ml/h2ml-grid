@@ -64,29 +64,27 @@
 		}
 	},
 	"attributes": {
-		"definingGridArea": {
-			"type": "object"
+		"requestingEdit": {
+			"type": "boolean",
+			"default": false
 		},
-		"activeBreakpointId": {
-			"type": "number"
+		"colCount": {
+			"type": "number",
+			"default": 3
 		},
-		"breakpoints": {
+		"rowCount": {
+			"type": "number",
+			"default": 4
+		},
+		"colDefinitions": {
 			"type": "array",
-			"default": [{
-				"id": 1,
-				"name": "",
-				"mediaQuery": "(min-width: 0px)",
-				"colCount": 3,
-				"rowCount": 4,
-				"colDefinitions": ["1fr", "1fr", "1fr"],
-				"rowDefinitions": ["max-content", "max-content", "max-content", "max-content"]
-			}]
+			"default": ["1fr", "1fr", "1fr"]
+		},
+		"rowDefinitions": {
+			"type": "array",
+			"default": ["max-content", "max-content", "max-content", "max-content"]
 		}
 	},
-	"providesContext": {
-		"h2ml-grid/activeBreakpointId": "activeBreakpointId",
-		"h2ml-grid/definingGridArea": "definingGridArea"
-    },
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css"

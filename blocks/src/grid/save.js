@@ -12,6 +12,11 @@ import {
 } from '@wordpress/i18n';
 
 
+import {
+	select
+} from '@wordpress/data';
+
+
 /**
  * Internal Dependencies
  */
@@ -22,28 +27,31 @@ import {
  * 
  */
 
-export default function Save(props) {
+export default function Save({attributes: {breakpoints}}) {
 
 	//
-	const {
-		colCount,
-		rowCount,
-		colDefinitions,
-		rowDefinitions
-	} = props.attributes;
+	const blockProps = useBlockProps.save();
+	const {children, ...innerBlockProps} = useInnerBlocksProps.save(blockProps);
 
 	//
-	const style = {
-		gridTemplateColumns: colDefinitions.join(' '),
-		gridTemplateRows: rowDefinitions.join(' ')
-	}
-
-	//
-	const blockProps = useBlockProps.save({style});
-	const innerBlockProps = useInnerBlocksProps.save(blockProps);
+	const style = breakpoints.reduce((style, {mediaQuery, colDefinitions, rowDefinitions}) => {
+		return style += `@media screen and ${mediaQuery} {
+			@scope {
+				:scope.wp-block-h2ml-grid {
+					grid-template-columns: ${colDefinitions.join(' ')};
+					grid-template-rows: ${rowDefinitions.join(' ')};
+				}
+			}
+		}`;
+	}, '').replace((/	|\r\n|\n|\r/gm),"");
 
 	//
 	return (
-		<div {...innerBlockProps}/>
+		<div {...innerBlockProps}>
+			<style>
+				{style}
+			</style>
+			{children}
+		</div>
 	);
 }

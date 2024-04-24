@@ -4,7 +4,7 @@
   "main": "webpack.config.js",
   "scripts": {
 	"reviseBuild": "node ./build_tools i:revision && wp-scripts build --webpack-src-dir=blocks/src && git add . && git commit -m 'Webpack Revision Build' && git push",
-    "build": "wp-scripts build --webpack-src-dir=blocks/src --watch"
+    "watch": "wp-scripts build --webpack-src-dir=blocks/src --watch"
   },
   "author": "Jack Notman",
   "license": "ISC",

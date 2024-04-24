@@ -5,7 +5,7 @@
 
 import { registerBlockType } from '@wordpress/blocks';
 
-import { grid as icon } from '@wordpress/icons';
+import { symbolFilled as icon } from '@wordpress/icons';
 
 /**
  * Internal dependencies
