@@ -26,20 +26,3 @@ export function useStatefulEffect(callback, dependencies = []) {
 	}, dependencies);
 }
 
-/**
- * Updates all Grid-Areas when a breakpoint is created, edited, or deleted.
- */
-
-export function useUpdatedBreakpoints(gridAreas, breakpoints) {
-	useStatefulEffect(() => {
-		gridAreas.forEach(({clientId: gridAreaClientId, attributes: {breakpoints: existingBreakpoints}}) => {
-			dispatch('core/block-editor').updateBlockAttributes(gridAreaClientId, {
-				breakpoints: Object.fromEntries(breakpoints.map(({id: breakpointId, mediaQuery}) => [breakpointId, {
-					...existingBreakpoints[breakpointId],
-					mediaQuery
-				}]))
-			});
-		});
-	}, [breakpoints]);
-}
-

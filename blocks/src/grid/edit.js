@@ -34,7 +34,7 @@ import './edit.scss';
 
 import blockDefinition from './block.json';
 
-import { useUpdatedBreakpoints } from './editorDependencies/hooks';
+import { useStatefulEffect } from './editorDependencies/hooks';
 
 import ToolbarControls from './editorDependencies/toolbar';
 
@@ -43,6 +43,23 @@ import InspectorControls from './editorDependencies/sidebar';
 import Appender from './editorDependencies/appender';
 
 import HiddenGridAreas from './editorDependencies/hiddenGridAreas';
+
+/**
+ * Updates all Grid-Areas when a breakpoint is created, edited, or deleted.
+ */
+
+function useUpdatedBreakpoints(gridAreas, breakpoints) {
+	useStatefulEffect(() => {
+		gridAreas.forEach(({clientId: gridAreaClientId, attributes: {breakpoints: existingBreakpoints}}) => {
+			dispatch('core/block-editor').updateBlockAttributes(gridAreaClientId, {
+				breakpoints: Object.fromEntries(breakpoints.map(({id: breakpointId, mediaQuery}) => [breakpointId, {
+					...existingBreakpoints[breakpointId],
+					mediaQuery
+				}]))
+			});
+		});
+	}, [breakpoints]);
+}
 
 /**
  * Main
