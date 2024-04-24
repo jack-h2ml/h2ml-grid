@@ -63,24 +63,25 @@ export default function HiddenGridAreas ({gridAreas, activeBreakpointId, clientI
 	const hiddenGridAreasTitle = __('Hidden Grid Areas', 'h2ml')
 
 	//
-	return (
-		<div className='wp-block-h2ml-grid--hidden-grid-areas--container'>
-			<p className='wp-block-h2ml-grid--hidden-grid-areas--title'>{hiddenGridAreasTitle}</p>
-			<div className='wp-block-h2ml-grid--hidden-grid-areas--wrapper'>
-				{hiddenGridAreas.map(({clientId, breakpoints, ...hiddenGridAreaHTML}) => {	
-					const callback = () => updateGridArea(clientId, breakpoints);	
-					return (<div
-						className='wp-block-h2ml-grid--hidden-grid-areas--grid-area-wrapper'
-						tabIndex={0}
-						role="button"
-						onClick={callback}
-						onKeyPress={callback}
-						dangerouslySetInnerHTML={hiddenGridAreaHTML}
-					/>);
-					
-				})}
+	return ((hiddenGridAreas.length) ? (
+			<div className='wp-block-h2ml-grid--hidden-grid-areas--container'>
+				<p className='wp-block-h2ml-grid--hidden-grid-areas--title'>{hiddenGridAreasTitle}</p>
+				<div className='wp-block-h2ml-grid--hidden-grid-areas--wrapper'>
+					{hiddenGridAreas.map(({clientId, breakpoints, ...hiddenGridAreaHTML}) => {	
+						const callback = () => updateGridArea(clientId, breakpoints);	
+						return (<div
+							className='wp-block-h2ml-grid--hidden-grid-areas--grid-area-wrapper'
+							tabIndex={0}
+							role="button"
+							onClick={callback}
+							onKeyPress={callback}
+							dangerouslySetInnerHTML={hiddenGridAreaHTML}
+						/>);
+						
+					})}
+				</div>
 			</div>
-		</div>
+		) : ''
 	)
 }
 
