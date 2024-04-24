@@ -38,7 +38,7 @@ export default function Edit({attributes, clientId, context, __unstableLayoutCla
 	} = attributes;
 
 	const { 
-		"h2ml-grid/activeBreakpointId": activeBreakpointId,
+		"h2ml-grid/activeBreakpointId": activeBreakpointId = 1,
 		"h2ml-grid/definingGridArea": definingGridArea
 	} = context;
 

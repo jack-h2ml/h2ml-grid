@@ -179,6 +179,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 			}});
 			const insertIndex = select('core/block-editor').getBlockCount(clientId);
 			dispatch('core/block-editor').insertBlock(newGridArea, insertIndex, clientId);
+			console.log('hmm')
 		} else {
 			// Updating Existing Grid Area
 			const { gridAreaClientId, existingBreakpoints } = definingGridArea;
