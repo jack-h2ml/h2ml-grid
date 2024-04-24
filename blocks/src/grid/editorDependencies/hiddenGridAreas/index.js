@@ -48,7 +48,7 @@ export default function HiddenGridAreas ({gridAreas, activeBreakpointId, clientI
 
 	const hiddenGridAreas = useMemo(() => {
 		return gridAreas.filter(({attributes: {breakpoints}}) => {
-			return Object.keys(breakpoints[activeBreakpointId]).length < 1;
+			return Object.keys(breakpoints[activeBreakpointId]).length <= 1;
 		}).map((hiddenGridArea) => {
 			const { clientId, attributes: {breakpoints} } = hiddenGridArea;
 			return {
