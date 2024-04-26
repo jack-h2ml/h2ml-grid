@@ -14,6 +14,7 @@ import { symbolFilled as icon } from '@wordpress/icons';
 import metadata from './block.json';
 import Edit from './edit';
 import Save from './save';
+import deprecated from './deprecated';
 import './style.scss';
 
 /**
@@ -25,5 +26,6 @@ registerBlockType(metadata.name, {
 	icon,
 	edit: Edit,
 	save: Save,
-	usesContext: ['h2ml-grid/activeBreakpointId', 'h2ml-grid/definingGridArea']
+	usesContext: ['h2ml-grid/activeBreakpointId', 'h2ml-grid/definingGridArea'],
+	deprecated
 });

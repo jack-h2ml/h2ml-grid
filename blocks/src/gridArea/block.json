@@ -63,8 +63,8 @@
 	},
 	"attributes": {
 		"breakpoints": {
-			"type": "object",
-			"default": {}
+			"type": "array",
+			"default": []
 		}
 	},
 	"editorScript": "file:./index.js",

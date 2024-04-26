@@ -7,39 +7,34 @@ import {
 	useInnerBlocksProps 
 } from '@wordpress/block-editor';
 
-/**
- * Internal Dependencies
- */
-
-
+import {
+	useId
+} from '@wordpress/element';
 
 /**
  * 
  */
 
-export default function Save({attributes: {breakpoints}, ...hmm}) {
+export default function Save({attributes: {breakpoints}}) {
 
 	//
 	const {children, ...innerBlocksProps} = useInnerBlocksProps.save(useBlockProps.save());
 
 	//
-	const style = Object.keys(breakpoints).reduce((style, breakpointId) => {
-		const {mediaQuery, ...definition} = breakpoints[breakpointId];
+	const style = breakpoints.reduce((style, {mediaQuery, ...definition}) => {
 		return style += `@media screen and ${mediaQuery} {
-			@scope {
-				:scope.wp-block-h2ml-grid-area {
-					${Object.keys(definition).length 
-						? `
-							display: flex;
-							grid-column-start: ${definition.colStart};
-							grid-column-end: ${definition.colEnd};
-							grid-row-start: ${definition.rowStart};
-							grid-row-end: ${definition.rowEnd};
-						`
-						: `
-							display: none;
-						`
-					}
+			:host {
+				${Object.keys(definition).length > 1
+					? `
+						display: flex !important;
+						grid-column-start: ${definition.colStart} !important;
+						grid-column-end: ${definition.colEnd} !important;
+						grid-row-start: ${definition.rowStart} !important;
+						grid-row-end: ${definition.rowEnd} !important;
+					`
+					: `
+						display: none !important;
+					`
 				}
 			}
 		}`;
@@ -48,9 +43,10 @@ export default function Save({attributes: {breakpoints}, ...hmm}) {
 	//
 	return (
 		<div { ...innerBlocksProps}>
-			<style>
-				{style}
-			</style>
+			<template shadowrootmode="closed">
+				<style>{style}</style>
+				<slot></slot>
+			</template>
 			{children}
 		</div>
 	);

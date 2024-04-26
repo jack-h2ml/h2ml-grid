@@ -21,6 +21,8 @@ import {
  * Internal Imports
  */
 
+import findByProperty from '../grid/dependencies/findByProperty';
+
 import ToolbarControls from './editorDependencies/toolbar';
 
 /**
@@ -28,7 +30,7 @@ import ToolbarControls from './editorDependencies/toolbar';
  */
 
 export default function Edit({attributes, clientId, context, __unstableLayoutClassNames, setAttributes}) {
-
+	
 	/**
 	 * Global
 	 */
@@ -38,11 +40,12 @@ export default function Edit({attributes, clientId, context, __unstableLayoutCla
 	} = attributes;
 
 	const { 
-		"h2ml-grid/activeBreakpointId": activeBreakpointId = 1,
+		"h2ml-grid/activeBreakpointId": activeBreakpointId,
 		"h2ml-grid/definingGridArea": definingGridArea
 	} = context;
 
-	const breakpoint = breakpoints[activeBreakpointId];
+	//
+	const [breakpointIndex, breakpoint] = findByProperty(breakpoints, 'id', activeBreakpointId);
 
 	// Allows us to use setAttributes where we might otherwise fall into an undo trap.
 	const { __unstableMarkNextChangeAsNotPersistent } = useDispatch('core/block-editor');
@@ -64,13 +67,11 @@ export default function Edit({attributes, clientId, context, __unstableLayoutCla
 
 	const hideGridArea = () => {
 		setAttributes({
-			breakpoints: {
-				...breakpoints,
-				[activeBreakpointId]: {
-					mediaQuery: breakpoint.mediaQuery
-				}
-			}
-		})
+			breakpoints: breakpoints.toSpliced(breakpointIndex, 1, {
+				id: breakpoint.id,
+				mediaQuery: breakpoint.mediaQuery
+			})
+		});
 	}
 
 	/**
@@ -89,7 +90,7 @@ export default function Edit({attributes, clientId, context, __unstableLayoutCla
 	const innerBlocksProps = useInnerBlocksProps(useBlockProps({style}));
 
 	// The JSX
-	return Object.keys(breakpoint).length > 1 && (<>
+	return Object.keys(breakpoint).length > 2 && (<>
 		{!definingGridArea && (<ToolbarControls
 			updateGridArea={updateGridArea}
 			hideGridArea={hideGridArea}

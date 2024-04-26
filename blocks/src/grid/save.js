@@ -36,11 +36,9 @@ export default function Save({attributes: {breakpoints}}) {
 	//
 	const style = breakpoints.reduce((style, {mediaQuery, colDefinitions, rowDefinitions}) => {
 		return style += `@media screen and ${mediaQuery} {
-			@scope {
-				:scope.wp-block-h2ml-grid {
-					grid-template-columns: ${colDefinitions.join(' ')};
-					grid-template-rows: ${rowDefinitions.join(' ')};
-				}
+			:host(.wp-block-h2ml-grid ) {
+				grid-template-columns: ${colDefinitions.join(' ')} !important;
+				grid-template-rows: ${rowDefinitions.join(' ')} !important;
 			}
 		}`;
 	}, '').replace((/	|\r\n|\n|\r/gm),"");
@@ -48,9 +46,10 @@ export default function Save({attributes: {breakpoints}}) {
 	//
 	return (
 		<div {...innerBlockProps}>
-			<style>
-				{style}
-			</style>
+			<template shadowrootmode="closed">
+				<style>{style}</style>
+				<slot></slot>
+			</template>
 			{children}
 		</div>
 	);

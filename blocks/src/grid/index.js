@@ -14,6 +14,7 @@ import { grid as icon } from '@wordpress/icons';
 import metadata from './block.json';
 import Edit from './edit';
 import Save from './save';
+import deprecated from './deprecated';
 import './style.scss';
 
 /**
@@ -24,5 +25,6 @@ registerBlockType(metadata.name, {
 	//
 	icon,
 	edit: Edit,
-	save: Save
+	save: Save,
+	deprecated
 });

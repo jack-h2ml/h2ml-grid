@@ -19,7 +19,10 @@ import {
 } from '@wordpress/data';
 
 import {
-	useMemo
+	useMemo,
+	useRef,
+	useState,
+	useEffect
 } from '@wordpress/element';
 
 import {
@@ -44,29 +47,14 @@ import Appender from './editorDependencies/appender';
 
 import HiddenGridAreas from './editorDependencies/hiddenGridAreas';
 
-/**
- * Updates all Grid-Areas when a breakpoint is created, edited, or deleted.
- */
-
-function useUpdatedBreakpoints(gridAreas, breakpoints) {
-	useStatefulEffect(() => {
-		gridAreas.forEach(({clientId: gridAreaClientId, attributes: {breakpoints: existingBreakpoints}}) => {
-			dispatch('core/block-editor').updateBlockAttributes(gridAreaClientId, {
-				breakpoints: Object.fromEntries(breakpoints.map(({id: breakpointId, mediaQuery}) => [breakpointId, {
-					...existingBreakpoints[breakpointId],
-					mediaQuery
-				}]))
-			});
-		});
-	}, [breakpoints]);
-}
+import findByProperty from './dependencies/findByProperty';
 
 /**
  * Main
  */
 
 export default function Edit({attributes, setAttributes, clientId}) {
-
+	
 	/**
 	 * Global
 	 */
@@ -129,7 +117,6 @@ export default function Edit({attributes, setAttributes, clientId}) {
 		const breakpointIndex = breakpoints.findIndex(({id}) => id === activeBreakpointId);
 		const newIndex = (breakpointIndex + change) % breakpoints.length;
 		const breakpointsCopy = [...breakpoints];
-
 		setAttributes({
 			breakpoints: breakpointsCopy.toSpliced(newIndex, 0, ...breakpointsCopy.splice(breakpointIndex, 1))
 		});
@@ -158,7 +145,16 @@ export default function Edit({attributes, setAttributes, clientId}) {
 	}
 
 	//
-	useUpdatedBreakpoints(gridAreas, breakpoints);
+	useStatefulEffect(() => {
+		gridAreas.forEach(({clientId: gridAreaClientId, attributes: {breakpoints: existingBreakpoints}}) => {
+			dispatch('core/block-editor').updateBlockAttributes(gridAreaClientId, {
+				breakpoints: breakpoints.map(({id, mediaQuery}) => {
+					const [_, existingBreakpoint] = findByProperty(existingBreakpoints, 'id', id);
+					return { ...existingBreakpoint, id, mediaQuery };
+				})
+			});
+		});
+	}, [breakpoints]);
 
 	/**
 	 * Manage Grid Areas
@@ -184,29 +180,25 @@ export default function Edit({attributes, setAttributes, clientId}) {
 		if(!definingGridArea.gridAreaClientId) {
 			// Adding new Grid Area
 			const newGridArea = Object.assign(createBlock('h2ml/grid-area'), {attributes: {
-				breakpoints: breakpoints.reduce((res, {id, mediaQuery}) => ({
-					...res,
-					[id]: {
-						mediaQuery,
-						...(id === activeBreakpointId && {
-							colStart, colEnd, rowStart, rowEnd
-						})
-					}
-				}), {})
+				breakpoints: breakpoints.reduce((res, {id, mediaQuery}) => [ ...res, {
+					id,
+					mediaQuery,
+					...(id === activeBreakpointId && {
+						colStart, colEnd, rowStart, rowEnd
+					})
+				}], [])
 			}});
 			const insertIndex = select('core/block-editor').getBlockCount(clientId);
 			dispatch('core/block-editor').insertBlock(newGridArea, insertIndex, clientId);
 		} else {
 			// Updating Existing Grid Area
 			const { gridAreaClientId, existingBreakpoints } = definingGridArea;
+			const [existingIndex, existingBreakpoint] = findByProperty(existingBreakpoints, 'id', activeBreakpointId);
 			dispatch('core/block-editor').updateBlockAttributes(gridAreaClientId, {
-				breakpoints: {
-					...existingBreakpoints,
-					[activeBreakpointId]: {
-						mediaQuery: breakpointDefinition.mediaQuery,
-						colStart, colEnd, rowStart, rowEnd
-					}
-				}
+				breakpoints: existingBreakpoints.toSpliced(existingIndex, 1, {
+					...existingBreakpoint,
+					colStart, colEnd, rowStart, rowEnd
+				})
 			});
 		}
 		cancelAddingGridArea();
