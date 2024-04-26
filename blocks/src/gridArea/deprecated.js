@@ -23,7 +23,6 @@ const v1 = {
 
 	//
 	migrate({breakpoints}) {
-		console.log(breakpoints);
 		const convertedBreakpoints = Object.entries(breakpoints).map(([id, breakpoint]) => ({id, ...breakpoint}));
 		return {
 			breakpoints: convertedBreakpoints
@@ -82,6 +81,14 @@ const v2 = {
 			type: 'array',
 			default: []
 		},
+	},
+
+	//
+	migrate({breakpoints}) {
+		const convertedBreakpoints = Object.entries(breakpoints).map(([id, breakpoint]) => ({id, ...breakpoint}));
+		return {
+			breakpoints: convertedBreakpoints
+		};
 	},
 
 	//
