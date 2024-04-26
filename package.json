@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "main": "webpack.config.js",
   "scripts": {
-	"reviseBuild": "node ./build_tools i:revision && wp-scripts build --webpack-src-dir=blocks/src && git add . && git commit -m 'Webpack Revision Build' && git push",
+    "reviseBuild": "node ./build_tools i:revision && wp-scripts build --webpack-src-dir=blocks/src && git add . && git commit -m 'Webpack Revision Build' && git push",
     "watch": "wp-scripts build --webpack-src-dir=blocks/src --watch"
   },
   "author": "Jack Notman",
   "license": "ISC",
   "devDependencies": {
     "@wordpress/icons": "^9.22.0",
-    "@wordpress/scripts": "26.2.0"
+    "@wordpress/scripts": "^26.19.0"
   },
   "dependencies": {
     "@emotion/styled": "^11.11.0",
