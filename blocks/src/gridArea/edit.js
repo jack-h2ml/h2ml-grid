@@ -44,8 +44,6 @@ export default function Edit({attributes, clientId, context, __unstableLayoutCla
 		"h2ml-grid/definingGridArea": definingGridArea
 	} = context;
 
-	console.log(activeBreakpointId);
-
 	//
 	const [breakpointIndex, breakpoint] = findByProperty(breakpoints, 'id', activeBreakpointId);
 
