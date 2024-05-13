@@ -25,6 +25,9 @@
 			  "orientation": "vertical"
 			}
 		},
+		"position": {
+			"sticky": true
+		},
 		"spacing": {
 			"blockGap": true,
 			"margin": [

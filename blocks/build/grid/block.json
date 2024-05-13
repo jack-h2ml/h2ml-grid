@@ -25,6 +25,9 @@
         "type": "grid"
       }
     },
+    "position": {
+      "sticky": false
+    },
     "spacing": {
       "blockGap": [
         "vertical",
