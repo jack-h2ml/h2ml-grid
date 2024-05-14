@@ -9,6 +9,7 @@ import {
 
 import {
 	select,
+	useSelect,
 	dispatch,
 	useDispatch
 } from '@wordpress/data';
@@ -78,12 +79,22 @@ export default function Edit({attributes, clientId, context, __unstableLayoutCla
 	 * Rendering
 	 */
 
+	// Determins if Grid Area, or any of its descendents are selected
+	const isSelected = useSelect((select) => {
+		const {
+			isBlockSelected,
+			hasSelectedInnerBlock
+		} = select('core/block-editor');
+		return (isBlockSelected(clientId) || hasSelectedInnerBlock(clientId));
+	}, []);
+
 	// Adds style attributes for Grid's columns and rows
 	const style = {
 		gridColumnStart: breakpoint.colStart,
 		gridColumnEnd: breakpoint.colEnd,
 		gridRowStart: breakpoint.rowStart,
-		gridRowEnd: breakpoint.rowEnd
+		gridRowEnd: breakpoint.rowEnd,
+		zIndex: isSelected ? 100 : 1
 	}
 
 	// Sets the WP Block Props
