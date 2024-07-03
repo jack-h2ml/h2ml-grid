@@ -14,9 +14,7 @@
   },
   "dependencies": {
     "@emotion/styled": "^11.11.0",
-    "@wordpress/api-fetch": "^6.42.0",
-    "geo-coordinates-parser": "^1.6.3",
-    "multiselect-react-dropdown": "^2.0.25"
+    "@wordpress/api-fetch": "^6.42.0"
   },
   "description": ""
 }
