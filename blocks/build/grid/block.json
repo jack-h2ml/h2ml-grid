@@ -17,14 +17,6 @@
       "full"
     ],
     "__experimentalSettings": true,
-    "layout": {
-      "allowSwitching": false,
-      "allowInheriting": false,
-      "allowEditing": false,
-      "default": {
-        "type": "grid"
-      }
-    },
     "position": {
       "sticky": true
     },
