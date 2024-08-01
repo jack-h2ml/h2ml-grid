@@ -3,7 +3,7 @@
 /*
 Plugin Name: H2ML Grid
 Author: Jack Notman
-Version: 1.0.41
+Version: 1.0.42
 */
 
 /**
