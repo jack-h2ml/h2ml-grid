@@ -30,7 +30,7 @@ import ToolbarControls from './editorDependencies/toolbar';
  * Main
  */
 
-export default function Edit({attributes, clientId, context, __unstableLayoutClassNames, setAttributes}) {
+export default function Edit({attributes, clientId, context, setAttributes}) {
 	
 	/**
 	 * Global

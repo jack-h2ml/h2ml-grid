@@ -23,7 +23,8 @@
 			  "verticalAlignment": "top",
 			  "justifyContent": "left",
 			  "orientation": "vertical"
-			}
+			},
+			"allowSizingOnChildren": true
 		},
 		"position": {
 			"sticky": true
