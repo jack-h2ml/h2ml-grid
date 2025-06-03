@@ -80,7 +80,9 @@ export default function({colCount, rowCount, definingGridArea,  start, confirm, 
 					disabled={(!definingGridArea)}
 					colRefrence={colRefrence}
 					rowRefrence={rowRefrence}
-					onMouseDown={() => {
+					onMouseDown={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
 						setDragging(true);
 						setAppendingStart([colRefrence, rowRefrence]);
 						setAppendingCurrent([colRefrence, rowRefrence]);
